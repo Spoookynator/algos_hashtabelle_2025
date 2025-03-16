@@ -135,6 +135,7 @@
     <ClCompile Include="save_load.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="hashtable.h" />
     <ClInclude Include="menu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
