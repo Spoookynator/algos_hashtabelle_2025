@@ -58,13 +58,13 @@ private:
 };
 
 namespace Commands {
-bool add(std::string);
-bool del(std::string);
-bool import(std::string);
-bool search(std::string);
-bool plot(std::string);
-bool save(std::string);
-bool load(std::string);
-bool quit(std::string);
-bool help(std::string);
+StockEntry createStock();
+bool add(std::string, Hashtable *hashtable);
+bool del(std::string, Hashtable* hashtable);
+bool import(std::string, Hashtable* hashtable);
+bool search(std::string, Hashtable* hashtable);
+bool plot(std::string, Hashtable* hashtable);
+bool save(std::string, Hashtable* hashtable);
+bool load(std::string, Hashtable* hashtable);
+void displayStock(Entry* entry);
 }

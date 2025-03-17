@@ -6,7 +6,8 @@
 
 int main() {
 	allTests();
-	Menu menu;
+	Hashtable* hashtable = new Hashtable();
+	Menu menu(hashtable);
 	
 	menu.addInput({ "ADD" }, Commands::add, "Fuegt eine Aktie hinzu");
 	menu.addInput({ "DEL" }, Commands::del, "Aktie wird geloescht");
