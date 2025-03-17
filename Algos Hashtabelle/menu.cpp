@@ -99,3 +99,48 @@ Input::Input()
 	this->keywords = {};
 	this->description = "";
 }
+
+bool Commands::add(std::string) {
+	// Implement the function
+	return false;
+}
+
+bool Commands::del(std::string) {
+	// Implement the function
+	return false;
+}
+
+bool Commands::import(std::string) {
+	// Implement the function
+	return false;
+}
+
+bool Commands::search(std::string) {
+	// Implement the function
+	return false;
+}
+
+bool Commands::plot(std::string) {
+	// Implement the function
+	return false;
+}
+
+bool Commands::save(std::string) {
+	// Implement the function
+	return false;
+}
+
+bool menu::load(std::string) {
+	// Implement the function
+	return false;
+}
+
+bool menu::quit(std::string) {
+	// Implement the function
+	return true;
+}
+
+bool menu::help(std::string) {
+	// Implement the function
+	return true;
+}
