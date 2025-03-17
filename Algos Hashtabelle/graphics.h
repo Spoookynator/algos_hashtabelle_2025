@@ -1,4 +1,5 @@
 #pragma once
 #include <string>
+#include "hashtable.h"
 
-void plotStock(std::string);
+bool plotStock(std::string, Hashtable*);
