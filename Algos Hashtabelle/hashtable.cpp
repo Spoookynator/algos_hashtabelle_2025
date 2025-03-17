@@ -37,6 +37,8 @@ bool Hashtable::import(std::string stockName)
 {
 	auto data = parseCsv(stockName + ".csv");
 
+	if (data == nullptr) return false;
+
 	auto stock = find(stockName);
 
 	if (stock == nullptr) return false;
