@@ -24,7 +24,7 @@ int Hashtable::calculateHash(const std::string& hashString) {
 
 	long long hash = 0;
 
-	int power = 0;
+	int power = 1;
 
 	for (char c : hashString) {
 		hash = (hash + (c - 'a' + 1) * power) % TABLE_SIZE;
