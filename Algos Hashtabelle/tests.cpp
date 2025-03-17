@@ -1,5 +1,6 @@
 #include "tests.h"
 #include "hashtable.h"
+#include "import.h"
 
 bool addTests(Hashtable* hashtable) {
 	std::string name = "Testname test";
@@ -59,12 +60,28 @@ bool removeTests(Hashtable* hashtable) {
 	return true;
 }
 
+// this is a visual test only, i am not gonna write a testcase for that
+bool csvTests() {
+	auto data = parseCsv("HistoricalData_1742230578236.csv");
+
+	for (int i = 0; i < 30; i++)
+	{
+		if (data == nullptr || data[i] == nullptr) {
+			std::cout << "No data for this day\n";
+			continue;
+		}
+		std::cout << "date: " << data[i]->date << " close: " << data[i]->close << " volume: " << data[i]->volume << " open: " << data[i]->open << " high: " << data[i]->high << " low: " << data[i]->low << "\n";
+	}
+
+	return true; 
+}
+
 void allTests() {
 	Hashtable* hashtable = new Hashtable();
 	std::cout << "Add test: " << addTests(hashtable) << "\n";
 	std::cout << "Find test: " << findTests(hashtable) << "\n";
 	std::cout << "Remove test: " << removeTests(hashtable) << "\n";
-
+	std::cout << "csv Tst: " << csvTests() << "\n";
 	delete hashtable;
 
 }
