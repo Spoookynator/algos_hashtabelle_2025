@@ -102,47 +102,100 @@ Input::Input()
 	this->description = "";
 }
 
-bool Commands::add(std::string) {
+StockEntry Commands::createStock() {
+	std::string name, abbreviation, wkn;
+	std::cout << "Name: ";
+	std::cin >> name;
+	std::cout << "Abbreviation: ";
+	std::cin >> abbreviation;
+	std::cout << "WKN: ";
+	std::cin >> wkn;
+
+	Id id(name, abbreviation, wkn);
+	StockEntry entry(id);
+	return entry;
+}
+
+bool Commands::add(std::string, Hashtable *hashtable) {
+	// Implement the function
+	StockEntry entry = Commands::createStock();
+	hashtable->add(entry);
+	if (hashtable->find(entry.getId()->name) == nullptr) return false;
+	if (hashtable->find(entry.getId()->name)->getId()->name != entry.getId()->name) return false;
+	if (hashtable->find(entry.getId()->name)->getId()->abbreviation != entry.getId()->abbreviation) return false;
+	if (hashtable->find(entry.getId()->name)->getId()->wkn != entry.getId()->wkn) return false;
+	return true;
+}
+
+bool Commands::del(std::string, Hashtable* hashtable) {
+	// Implement the function
+	StockEntry entry = Commands::createStock();
+	hashtable->remove(entry.getId()->name);
+	if (hashtable->find(entry.getId()->name) != nullptr) return false;
+	if (hashtable->remove(entry.getId()->name) != false) return false;
+	return true;
+}
+
+bool Commands::import(std::string, Hashtable* hashtable) {
 	// Implement the function
 	return false;
 }
 
-bool Commands::del(std::string) {
+bool Commands::search(std::string, Hashtable* hashtable) {
+	// Implement the function
+	StockEntry entry = Commands::createStock();
+	Entry* found = hashtable->find(entry.getId()->name);
+	if (hashtable->find(entry.getId()->name) == nullptr) return false;
+	if (hashtable->find(entry.getId()->name)->getId()->name != entry.getId()->name) return false;
+	if (hashtable->find(entry.getId()->name)->getId()->abbreviation != entry.getId()->abbreviation) return false;
+	if (hashtable->find(entry.getId()->name)->getId()->wkn != entry.getId()->wkn) return false;
+	displayStock(found);
+	return false;
+}
+
+bool Commands::plot(std::string, Hashtable* hashtable) {
 	// Implement the function
 	return false;
 }
 
-bool Commands::import(std::string) {
+bool Commands::save(std::string, Hashtable* hashtable) {
 	// Implement the function
 	return false;
 }
 
-bool Commands::search(std::string) {
+bool Commands::load(std::string, Hashtable* hashtable) {
 	// Implement the function
 	return false;
 }
 
-bool Commands::plot(std::string) {
-	// Implement the function
-	return false;
-}
+void Commands::displayStock(Entry* entry) {
+	
 
-bool Commands::save(std::string) {
-	// Implement the function
-	return false;
-}
-
-bool Commands::load(std::string) {
-	// Implement the function
-	return false;
-}
-
-bool Commands::quit(std::string) {
-	// Implement the function
-	return false;
-}
-
-bool Commands::help(std::string) {
-	// Implement the function
-	return false;
+	std::cout << "Name: " << entry->getId()->name << "\n";
+	std::cout << "Abbreviation: " << entry->getId()->abbreviation << "\n";
+	std::cout << "WKN: " << entry->getId()->wkn << "\n";
+	std::cout << "----------------------------------\n";
+	std::cout << "Data:\n";
+	std::cout << "----------------------------------\n";
+	for (int i = 0; i < 30; i++) {
+		/*
+		* Go through the data and print it
+		* Commented out due to no immport function implemented yet to fill the stockdata
+		* std::string date = entry->getData()[i]->date;
+		* double close = entry->getData()[i]->close;
+		* int volume = entry->getData()[i]->volume;
+		* double open = entry->getData()[i]->open;
+		* double high = entry->getData()[i]->high;
+		* double low = entry->getData()[i]->low;
+		* std::cout << "Date: " << date << "\n";
+		* std::cout << "Close: " << close << "\n";
+		* std::cout << "Volume: " << volume << "\n";
+		* std::cout << "Open: " << open << "\n";
+		* std::cout << "High: " << high << "\n";
+		* std::cout << "Low: " << low << "\n";
+		* std::cout << "----------------------------------\n";
+		*/
+		
+	}
+	
 }
