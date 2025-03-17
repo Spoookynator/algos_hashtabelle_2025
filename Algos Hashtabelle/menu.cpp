@@ -86,8 +86,9 @@ void Menu::help()
 	{
 		std::cout << this->inputs[i].keywords.at(0) << ": " << this->inputs[i].description << "\n";
 	}
-	
-	std::cout << "Quit: exits the program\n";
+		
+	std::cout << "HELP: Commands werden erklaert.\n";
+	std::cout << "QUIT: Programm wird beendet.\n";
 }
 
 Input::Input(std::vector<std::string> keywords, funcPtr func, std::string description) : keywords(keywords), function(func), description(description) {}
