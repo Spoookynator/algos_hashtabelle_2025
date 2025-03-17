@@ -31,7 +31,7 @@ bool plotStock(std::string stock, Hashtable* hashtable) {
         // setw for always allocating 7 space to the num, fixed for fixed pos and setprec for the decimals
         std::cout << std::setw(7) << std::fixed << std::setprecision(2) << value << " | ";
 
-        for (int x = 30; x > 0; x--) {
+        for (int x = 29; x >=0; x--) {
             if (!data[x]) {
                 std::cout << "/";
                 continue;
