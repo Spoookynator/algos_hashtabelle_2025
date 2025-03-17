@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
 
-class Data;
+struct Data;
 
 Data** parseCsv(std::string);

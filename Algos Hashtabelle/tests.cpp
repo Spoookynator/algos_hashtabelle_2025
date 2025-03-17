@@ -1,6 +1,7 @@
 #include "tests.h"
 #include "hashtable.h"
 #include "import.h"
+#include "graphics.h"
 
 bool addTests(Hashtable* hashtable) {
 	std::string name = "Testname test";
@@ -88,12 +89,29 @@ bool csvTests(Hashtable* hashtable) {
 	return true; 
 }
 
+bool graphicsTest(Hashtable* hashtable) {
+	std::string name = "Amazon.com Inc";
+	std::string abbreviation = "AMZN";
+	std::string wkn = "123123";
+
+	Id id(name, abbreviation, wkn);
+	StockEntry entry(id);
+
+	hashtable->add(entry);
+	hashtable->import(name);
+	plotStock(name, hashtable);
+
+	return true;
+}
+
 void allTests() {
 	Hashtable* hashtable = new Hashtable();
 	std::cout << "Add test: " << addTests(hashtable) << "\n";
 	std::cout << "Find test: " << findTests(hashtable) << "\n";
 	std::cout << "Remove test: " << removeTests(hashtable) << "\n";
 	//std::cout << "csv Tst: " << csvTests(hashtable) << "\n"; 
+	graphicsTest(hashtable);
+
 	delete hashtable;
 
 }
