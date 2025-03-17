@@ -17,10 +17,18 @@ struct Data{
 	double low;
 };
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="name"></param>
+/// <param name="abbreviation"></param>
+/// <param name="wkn"></param>
 struct Id {
-	Id(std::string, std::string);
+	Id(std::string, std::string, std::string);
+	Id(const Id&);
 	std::string name;
 	std::string abbreviation;
+	std::string wkn;
 };
 
 struct Entry
@@ -33,29 +41,40 @@ struct Entry
 	// double const so the pointer cant be changed and the value also cant be changed
 	// this returns nullptr when there is no data stored
 	virtual const Data* const* getData() const;
-	virtual const Id* const getId() const;
-
-	bool isOccupied() const;
-	bool isEmpty() const;
+	virtual const Id* getId() const;
 };
 
 struct StockEntry : public Entry {
 
 	StockEntry(Id, Data*[30]);
+	StockEntry(Id);
+	StockEntry(const StockEntry&);
+
 	~StockEntry();
+
 	Id stockId;
 	Data* stockData[30] = {};
 
 	const Data* const * getData() const override;
-	const Id* const getId() const override;
+	const Id* getId() const override;
 };
 
 class Hashtable {
 public:
 	Hashtable();
+	~Hashtable();
 
-	int calculateHash(std::string abbreviation);
+	bool add(const StockEntry&);
 
+	bool remove(std::string);
+
+	Entry* find(std::string);
+
+	int calculateHash(const std::string&);
+	
 private:
+
 	Entry* table[TABLE_SIZE];
+	int findHash(std::string identifier);
+	int quadraticHash(int, int);
 };
