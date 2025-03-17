@@ -19,14 +19,18 @@ Hashtable::~Hashtable()
 }
 
 int Hashtable::calculateHash(const std::string& hashString) {
-	// hash function
-	int hashIndex = 0;
-	for (int i = 0; i < hashString.length(); i++) {
-		hashIndex += hashString[i];
+	
+	int P = 31; // prime num base
 
+	long long hash = 0;
+
+	int power = 0;
+
+	for (char c : hashString) {
+		hash = (hash + (c - 'a' + 1) * power) % TABLE_SIZE;
+		power = (power * P) % TABLE_SIZE;
 	}
-	hashIndex = hashIndex % TABLE_SIZE; //2003
-	return hashIndex;
+	return hash < 0 ? -hash : hash; // hash has to be positive
 }
 
 bool Hashtable::import(std::string stockName)
