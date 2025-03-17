@@ -54,3 +54,15 @@ private:
 	short int inputLen = 0;
 	Input inputs[10] = {};
 };
+
+namespace menu {
+bool add(std::string);
+bool del(std::string);
+bool import(std::string);
+bool search(std::string);
+bool plot(std::string);
+bool save(std::string);
+bool load(std::string);
+bool quit(std::string);
+bool help(std::string);
+}

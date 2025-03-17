@@ -8,6 +8,10 @@ int main() {
 	allTests();
 	Menu menu;
 	
+	menu.addInput({ "ADD" }, menu::add, "Fuegt eine Aktie hinzu");
+	menu.addInput({ "SEARCH" }, menu::search, "Eine Aktie wird in der Hashtabelle gesucht und ausgegeben.");
+	menu.addInput({ "DEL" }, menu::del, "Aktie wird gelöscht");
+
 	/*
 	* TODO: Add commands to menu
 	* menu.addInput({ "ADD" }, hashtable->add(entry), "Fuegt eine Aktie hinzu");
