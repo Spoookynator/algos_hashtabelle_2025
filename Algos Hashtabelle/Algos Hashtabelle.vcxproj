@@ -136,6 +136,7 @@
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphics.h" />
     <ClInclude Include="hashtable.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="tests.h" />

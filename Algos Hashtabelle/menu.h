@@ -1,8 +1,9 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "hashtable.h"
 
-typedef bool(*funcPtr)(std::string);
+typedef bool(*funcPtr)(std::string, Hashtable*);
 
 struct Input
 {
@@ -23,7 +24,7 @@ struct Input
 class Menu
 {
 public:
-	Menu();
+	Menu(Hashtable*);
 
 	/// <summary>
 	/// Bind inputs to the menus
@@ -50,6 +51,7 @@ private:
 	/// <returns></returns>
 	bool executeInput(std::string[2]);
 
+	Hashtable* hashtable = nullptr;
 
 	short int inputLen = 0;
 	Input inputs[10] = {};

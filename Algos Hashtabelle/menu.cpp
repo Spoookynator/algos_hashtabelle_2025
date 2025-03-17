@@ -2,7 +2,9 @@
 #include <iostream>
 #include <string>
 
-Menu::Menu() {}
+Menu::Menu(Hashtable* hashtable) {
+	this->hashtable = hashtable;
+}
 
 int Menu::getInput()
 {
@@ -72,7 +74,7 @@ bool Menu::executeInput(std::string input[2])
 	for (int i = 0; i < inputLen; i++)
 	{
 		if (std::find(inputs[i].keywords.begin(), inputs[i].keywords.end(), input[0]) != inputs[i].keywords.end()) {
-			return inputs[i].function(input[1]);
+			return inputs[i].function(input[1], this->hashtable);
 		}
 	}
 	
