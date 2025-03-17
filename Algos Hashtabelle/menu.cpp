@@ -170,7 +170,7 @@ bool Commands::import(std::string args, Hashtable* hashtable) {
 
 	if (res)
 	{
-		std::cout << "Import sucessful!";
+		std::cout << "Import sucessful!\n";
 		return true;
 	}
 	return false;

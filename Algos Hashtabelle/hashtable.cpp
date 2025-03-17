@@ -36,7 +36,6 @@ bool Hashtable::import(std::string stockName)
 	auto stock = find(stockName);
 
 	if (stock == nullptr) return false;
-	if (stock->occupied) return false;
 
 	auto res = stock->setData(data);
 
