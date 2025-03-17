@@ -130,17 +130,17 @@ bool Commands::save(std::string) {
 	return false;
 }
 
-bool menu::load(std::string) {
+bool Commands::load(std::string) {
 	// Implement the function
 	return false;
 }
 
-bool menu::quit(std::string) {
+bool Commands::quit(std::string) {
 	// Implement the function
-	return true;
+	return false;
 }
 
-bool menu::help(std::string) {
+bool Commands::help(std::string) {
 	// Implement the function
-	return true;
+	return false;
 }

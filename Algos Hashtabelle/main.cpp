@@ -9,16 +9,13 @@ int main() {
 	Menu menu;
 	
 	menu.addInput({ "ADD" }, Commands::add, "Fuegt eine Aktie hinzu");
+	menu.addInput({ "DEL" }, Commands::del, "Aktie wird geloescht");
+	menu.addInput({ "IMPORT" }, Commands::import, "Kurswerte fuer eine Aktie werden aus einer csv Datei iportiert");
 	menu.addInput({ "SEARCH" }, Commands::search, "Eine Aktie wird in der Hashtabelle gesucht und ausgegeben.");
-	menu.addInput({ "DEL" }, Commands::del, "Aktie wird gelöscht");
-
-	/*
-	* TODO: Add commands to menu
-	* menu.addInput({ "ADD" }, hashtable->add(entry), "Fuegt eine Aktie hinzu");
-	* menu.addInput({ "SEARCH" }, hashtable->find(stockName), "Eine Aktie wird in der Hashtabelle gesucht und ausgegeben.");
-	* menu.addInput({ "DEL" }), hashtable->remove(stockName), "Aktie wird gelöscht");
-	*/
-
+	menu.addInput({ "PLOT" }, Commands::plot, "Die Schlusskurse der letzten 30 TAage einer Aktie werden ausgegeben.");
+	menu.addInput({ "SAVE" }, Commands::save, "Programm speichert die Hashtabelle in eine Datei ab.");
+	menu.addInput({ "LOAD" }, Commands::load, "Programm laedt die Hashtabelle aus einer Datei.");
+	
 	//print menu
 	std::cout << "\n----------------------------------\n";
 	std::cout << "Aktienkurs-Verwaltungs-System - Uebung 1 ALGODAT\n";
