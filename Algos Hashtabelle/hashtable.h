@@ -33,10 +33,12 @@ struct Id {
 
 struct Entry
 {
-	Entry(bool = true, bool = false);
+	Entry(bool = true, bool = false, std::string = "");
 	virtual ~Entry() = default;
 	bool occupied; // tracks if the stock was occupied before, for safe deletion
 	bool empty;
+
+	std::string pastName;
 
 	// double const so the pointer cant be changed and the value also cant be changed
 	// this returns nullptr when there is no data stored

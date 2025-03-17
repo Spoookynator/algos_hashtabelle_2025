@@ -36,6 +36,7 @@ bool Hashtable::import(std::string stockName)
 	auto stock = find(stockName);
 
 	if (stock == nullptr) return false;
+	if (stock->occupied) return false;
 
 	auto res = stock->setData(data);
 
@@ -51,6 +52,16 @@ int Hashtable::findHash(std::string identifier)
 	int count = 0;
 	while (!this->table[hash]->empty || this->table[hash]->occupied)
 	{
+		if (this->table[hash]->pastName == identifier && this->table[hash]->empty)
+		{
+			return hash; // this is the past spot of this entry
+		}
+
+		if (this->table[hash]->getId() != nullptr && this->table[hash]->getId()->name == identifier) // we could also change that to wkn or sth
+		{
+			return hash * -1; // already in list
+		}
+
 		hash = quadraticHash(hash, count);
 
 		if (count >= TABLE_SIZE)
@@ -58,10 +69,7 @@ int Hashtable::findHash(std::string identifier)
 			return -100000; // no space in table -> if the hashtable has to be bigger, then this whole function would need a rework
 		}
 
-		if (this->table[hash]->getId() != nullptr && this->table[hash]->getId()->name == identifier) // we could also change that to wkn or sth
-		{
-			return hash * -1; // already in list
-		}
+
 
 		count++;
 	}
@@ -82,6 +90,7 @@ bool Hashtable::add(const StockEntry& entry)
 
 	if (hash < 0) return false; // if element is already inside or no space
 
+	std::cout << "Added with hash: " << hash << std::endl;
 	delete this->table[hash]; // free default placeholder
 
 	this->table[hash] = new StockEntry(entry); // add new entry
@@ -99,12 +108,17 @@ bool Hashtable::remove(std::string identifier)
 
 	int hash = findHash(identifier);
 	
+	
+	std::string pastId = entry->pastName;
+	
 	delete entry;
 
 	if (hash <= -100000 || hash >= 0) return false; // nothing was found
 
 	hash *= -1; // invert to get real result
-	table[hash] = new Entry();
+
+
+	table[hash] = new Entry(true, true, pastId);
 
 	table[hash]->occupied = true;
 	return true;
@@ -117,8 +131,8 @@ Entry* Hashtable::find(std::string identifier)
 	if (hash <= -100000 || hash >= 0) return nullptr; // nothing was found
 	
 	hash *= -1; // invert to get real result
-
-	if (table[hash]->empty) return nullptr; // identifier was not found in hashtable
+	
+	if (table[hash]->empty && !table[hash]->occupied) return nullptr; // identifier was not found in hashtable
 	return this->table[hash];
 }
 
@@ -130,6 +144,7 @@ StockEntry::StockEntry(Id id, Data* data[30]) : Entry(false, true), stockId(id)
 			this->stockData[i] = new Data(*data[i]);
 		}
 	}
+	this->pastName = id.name;
 }
 
 StockEntry::StockEntry(Id id) : Entry(false, true), stockId(id)
@@ -139,6 +154,7 @@ StockEntry::StockEntry(Id id) : Entry(false, true), stockId(id)
 		this->stockData[i] = nullptr;
 	}
 
+	this->pastName = id.name;
 }
 
 StockEntry::StockEntry(const StockEntry& other) : stockId(other.stockId)
@@ -150,6 +166,7 @@ StockEntry::StockEntry(const StockEntry& other) : stockId(other.stockId)
 
 	this->empty = other.empty;
 	this->occupied = other.occupied;
+	this->pastName = other.pastName;
 }
 
 StockEntry::~StockEntry()
@@ -183,10 +200,11 @@ bool StockEntry::setData(Data** data)
 }
 
 
-Entry::Entry(bool empty, bool occupied)
+Entry::Entry(bool empty, bool occupied, std::string pastName)
 {
 	this->empty = empty;
 	this->occupied = occupied;
+	this->pastName = pastName;
 }
 
 const Data* const* Entry::getData() const

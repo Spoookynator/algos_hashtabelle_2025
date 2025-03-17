@@ -1,6 +1,8 @@
 #include "menu.h"
 #include <iostream>
 #include <string>
+#include <array>
+#include "graphics.h"
 
 Menu::Menu(Hashtable* hashtable) {
 	this->hashtable = hashtable;
@@ -62,7 +64,7 @@ void Menu::startLoop()
 		{
 			if (output == 0)
 			{
-				std::cout << "Wrong input, type HELP to get help!\n";
+				std::cout << "Wrong input or wrong arguments, type HELP to get help!\n";
 			}
 			output = this->getInput();
 		} while (output == 0);
@@ -102,100 +104,109 @@ Input::Input()
 	this->description = "";
 }
 
-StockEntry Commands::createStock() {
-	std::string name, abbreviation, wkn;
-	std::cout << "Name: ";
-	std::cin >> name;
-	std::cout << "Abbreviation: ";
-	std::cin >> abbreviation;
-	std::cout << "WKN: ";
-	std::cin >> wkn;
+bool Commands::add(std::string args, Hashtable *hashtable) {
 
-	Id id(name, abbreviation, wkn);
-	StockEntry entry(id);
-	return entry;
+	std::array<std::string, 3> tokens;
+	size_t start = 0, end;
+	char delimiter = ',';
+	
+	try
+	{
+		// Find first delimiter
+		end = args.find(delimiter, start);
+		tokens[0] = args.substr(start, end - start);
+		start = end + 1;
+
+		// Find second delimiter
+		end = args.find(delimiter, start);
+		tokens[1] = args.substr(start, end - start);
+		start = end + 1;
+
+		// Remaining part
+		tokens[2] = args.substr(start);
+
+		if (tokens[0] == args || tokens[1] == args || tokens[2] == args) return false;
+
+		Id id(tokens[0], tokens[1], tokens[2]);
+		StockEntry entry(id);
+
+		bool res = hashtable->add(entry);
+
+		if (!res)
+		{
+			std::cout << "Element already inside hashtable!\n";
+			return false;
+		}
+		else {
+			std::cout << "Added element to hashtable!\n";
+			return true;
+		}
+
+	}
+	catch (...)
+	{
+		return false;
+	}
+	
 }
 
-bool Commands::add(std::string, Hashtable *hashtable) {
-	// Implement the function
-	StockEntry entry = Commands::createStock();
-	hashtable->add(entry);
-	if (hashtable->find(entry.getId()->name) == nullptr) return false;
-	if (hashtable->find(entry.getId()->name)->getId()->name != entry.getId()->name) return false;
-	if (hashtable->find(entry.getId()->name)->getId()->abbreviation != entry.getId()->abbreviation) return false;
-	if (hashtable->find(entry.getId()->name)->getId()->wkn != entry.getId()->wkn) return false;
+bool Commands::del(std::string args, Hashtable* hashtable)
+{
+	bool res = hashtable->remove(args);
+	
+	if (res)
+	{
+		std::cout << "Sucessfully deleted entry!\n";
+		return true;
+	}
+	else {
+		return false; 
+	}
+}
+
+bool Commands::import(std::string args, Hashtable* hashtable) {
+
+	auto res = hashtable->import(args);
+
+	if (res)
+	{
+		std::cout << "Import sucessful!";
+		return true;
+	}
+	return false;
+}
+
+bool Commands::search(std::string args, Hashtable* hashtable) {
+
+	auto entry = hashtable->find(args);
+
+	if (entry == nullptr)  
+	{
+		std::cout << "'" << args << "' not found!\n";
+		return false;
+	} 
+
+	displayStock(entry);
 	return true;
 }
 
-bool Commands::del(std::string, Hashtable* hashtable) {
-	// Implement the function
-	StockEntry entry = Commands::createStock();
-	hashtable->remove(entry.getId()->name);
-	if (hashtable->find(entry.getId()->name) != nullptr) return false;
-	if (hashtable->remove(entry.getId()->name) != false) return false;
-	return true;
+bool Commands::plot(std::string args, Hashtable* hashtable) {
+	return plotStock(args, hashtable);
 }
 
-bool Commands::import(std::string, Hashtable* hashtable) {
+bool Commands::save(std::string args, Hashtable* hashtable) {
 	// Implement the function
 	return false;
 }
 
-bool Commands::search(std::string, Hashtable* hashtable) {
-	// Implement the function
-	StockEntry entry = Commands::createStock();
-	Entry* found = hashtable->find(entry.getId()->name);
-	if (hashtable->find(entry.getId()->name) == nullptr) return false;
-	if (hashtable->find(entry.getId()->name)->getId()->name != entry.getId()->name) return false;
-	if (hashtable->find(entry.getId()->name)->getId()->abbreviation != entry.getId()->abbreviation) return false;
-	if (hashtable->find(entry.getId()->name)->getId()->wkn != entry.getId()->wkn) return false;
-	displayStock(found);
-	return false;
-}
-
-bool Commands::plot(std::string, Hashtable* hashtable) {
-	// Implement the function
-	return false;
-}
-
-bool Commands::save(std::string, Hashtable* hashtable) {
-	// Implement the function
-	return false;
-}
-
-bool Commands::load(std::string, Hashtable* hashtable) {
+bool Commands::load(std::string args, Hashtable* hashtable) {
 	// Implement the function
 	return false;
 }
 
 void Commands::displayStock(Entry* entry) {
-	
-
 	std::cout << "Name: " << entry->getId()->name << "\n";
 	std::cout << "Abbreviation: " << entry->getId()->abbreviation << "\n";
 	std::cout << "WKN: " << entry->getId()->wkn << "\n";
 	std::cout << "----------------------------------\n";
-	std::cout << "Data:\n";
-	std::cout << "----------------------------------\n";
-	for (int i = 0; i < 30; i++) {
-		/*
-		* Go through the data and print it
-		* Commented out due to no immport function implemented yet to fill the stockdata
-		* std::string date = entry->getData()[i]->date;
-		* double close = entry->getData()[i]->close;
-		* int volume = entry->getData()[i]->volume;
-		* double open = entry->getData()[i]->open;
-		* double high = entry->getData()[i]->high;
-		* double low = entry->getData()[i]->low;
-		* std::cout << "Date: " << date << "\n";
-		* std::cout << "Close: " << close << "\n";
-		* std::cout << "Volume: " << volume << "\n";
-		* std::cout << "Open: " << open << "\n";
-		* std::cout << "High: " << high << "\n";
-		* std::cout << "Low: " << low << "\n";
-		* std::cout << "----------------------------------\n";
-		*/
-		
-	}
-	
 }

@@ -58,7 +58,6 @@ private:
 };
 
 namespace Commands {
-StockEntry createStock();
 bool add(std::string, Hashtable *hashtable);
 bool del(std::string, Hashtable* hashtable);
 bool import(std::string, Hashtable* hashtable);
