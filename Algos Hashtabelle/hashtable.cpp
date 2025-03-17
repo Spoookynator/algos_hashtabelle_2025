@@ -1,4 +1,5 @@
 #include "hashtable.h"
+#include "import.h"
 
 Hashtable::Hashtable() {
 
@@ -26,6 +27,21 @@ int Hashtable::calculateHash(const std::string& hashString) {
 	}
 	hashIndex = hashIndex % TABLE_SIZE; //2003
 	return hashIndex;
+}
+
+bool Hashtable::import(std::string stockName)
+{
+	auto data = parseCsv(stockName + ".csv");
+
+	auto stock = find(stockName);
+
+	if (stock == nullptr) return false;
+
+	auto res = stock->setData(data);
+
+	if (!res) return false;
+
+	return true;
 }
 
 int Hashtable::findHash(std::string identifier)
@@ -155,6 +171,18 @@ const Id* StockEntry::getId() const
 	return id;
 }
 
+bool StockEntry::setData(Data** data)
+{
+	for (int i = 0; i < 30; i++)
+	{
+		this->stockData[i] = data[i];
+	}
+
+	delete[] data;
+	return true;
+}
+
+
 Entry::Entry(bool empty, bool occupied)
 {
 	this->empty = empty;
@@ -169,6 +197,11 @@ const Data* const* Entry::getData() const
 const Id* Entry::getId() const
 {
 	return nullptr;
+}
+
+bool Entry::setData(Data**)
+{
+	return false;
 }
 
 Data::Data(std::string date, double close, int volume, double open, double high, double low) : date(date), close(close), volume(volume), open(open), high(high), low(low)

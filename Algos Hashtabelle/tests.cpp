@@ -61,8 +61,8 @@ bool removeTests(Hashtable* hashtable) {
 }
 
 // this is a visual test only, i am not gonna write a testcase for that
-bool csvTests() {
-	auto data = parseCsv("HistoricalData_1742230578236.csv");
+bool csvTests(Hashtable* hashtable) {
+	auto data = parseCsv("Delete This.csv"); // name of the csv that needs to be imported
 
 	for (int i = 0; i < 30; i++)
 	{
@@ -73,6 +73,18 @@ bool csvTests() {
 		std::cout << "date: " << data[i]->date << " close: " << data[i]->close << " volume: " << data[i]->volume << " open: " << data[i]->open << " high: " << data[i]->high << " low: " << data[i]->low << "\n";
 	}
 
+	std::string name = "Delete This";
+	std::string abbreviation = "delts";
+	std::string wkn = "123123";
+
+	Id id(name, abbreviation, wkn);
+	StockEntry entry(id);
+
+	hashtable->add(entry);
+
+	hashtable->import(name);
+
+	std::cout << hashtable->find(name)->getData()[7]->date;
 	return true; 
 }
 
@@ -81,7 +93,7 @@ void allTests() {
 	std::cout << "Add test: " << addTests(hashtable) << "\n";
 	std::cout << "Find test: " << findTests(hashtable) << "\n";
 	std::cout << "Remove test: " << removeTests(hashtable) << "\n";
-	std::cout << "csv Tst: " << csvTests() << "\n";
+	//std::cout << "csv Tst: " << csvTests(hashtable) << "\n"; 
 	delete hashtable;
 
 }

@@ -42,6 +42,8 @@ struct Entry
 	// this returns nullptr when there is no data stored
 	virtual const Data* const* getData() const;
 	virtual const Id* getId() const;
+
+	virtual bool setData(Data**);
 };
 
 struct StockEntry : public Entry {
@@ -57,6 +59,8 @@ struct StockEntry : public Entry {
 
 	const Data* const * getData() const override;
 	const Id* getId() const override;
+
+	bool setData(Data**);
 };
 
 class Hashtable {
@@ -71,6 +75,8 @@ public:
 	Entry* find(std::string);
 
 	int calculateHash(const std::string&);
+
+	bool import(std::string);
 	
 private:
 
