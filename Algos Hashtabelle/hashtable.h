@@ -76,9 +76,15 @@ public:
 
 	Entry* find(std::string);
 
+	Entry** getTable();
+
+	Entry* const* currentTable() const;
+
 	int calculateHash(const std::string&);
 
 	bool import(std::string);
+
+	bool loadTable(StockEntry entry);
 	
 private:
 

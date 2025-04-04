@@ -3,6 +3,7 @@
 #include <string>
 #include <array>
 #include "graphics.h"
+#include "save_load.h"
 
 Menu::Menu(Hashtable* hashtable) {
 	this->hashtable = hashtable;
@@ -10,6 +11,7 @@ Menu::Menu(Hashtable* hashtable) {
 
 int Menu::getInput()
 {
+	std::cout << "----------------------------------\n";
 	std::string input;
 	std::getline(std::cin, input); // get whole line, not just one string
 	
@@ -170,7 +172,7 @@ bool Commands::import(std::string args, Hashtable* hashtable) {
 
 	if (res)
 	{
-		std::cout << "Import sucessful!\n";
+		std::cout << "Import successful!\n";
 		return true;
 	}
 	return false;
@@ -194,14 +196,24 @@ bool Commands::plot(std::string args, Hashtable* hashtable) {
 	return plotStock(args, hashtable);
 }
 
-bool Commands::save(std::string args, Hashtable* hashtable) {
-	// Implement the function
-	return false;
+bool Commands::save(std::string args, Hashtable* hashtable) {  
+   
+	if (!SaveLoad::save(*hashtable, args)) {
+		std::cout << "Error saving hashtable data!\n";
+		return false;
+	}
+	std::cout << "Save successful!\n";
+	return true;
 }
 
 bool Commands::load(std::string args, Hashtable* hashtable) {
 	// Implement the function
-	return false;
+	if (!SaveLoad::load(*hashtable, args)) {
+		std::cout << "Error loading hashtable data!\n";
+		return false;
+	}
+	std::cout << "Load successful!\n";
+	return true;
 }
 
 void Commands::displayStock(Entry* entry) {

@@ -140,6 +140,7 @@
     <ClInclude Include="hashtable.h" />
     <ClInclude Include="import.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="save_load.h" />
     <ClInclude Include="tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

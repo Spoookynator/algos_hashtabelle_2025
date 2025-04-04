@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 *.csv
+/Algos Hashtabelle/3.2.txt
+/Algos Hashtabelle/ADD inputs for the CSV IMPORTs.txt
+*.txt
