@@ -33,6 +33,32 @@ double parsePrice(const std::string& priceStr) {
     return std::stod(priceStr.substr(1)); // Skip the '$' symbol
 }
 
+Data** parseLoad(std::string date, double close, double open, double high, double low, int volume) {
+    std::map<std::string, Data*> dataMap;
+	dataMap[date] = new Data(date, close, volume, open, high, low);
+
+    if (dataMap.empty()) {
+        std::cerr << "LOAD file is empty or invalid!" << std::endl;
+        return nullptr;
+    }
+
+    std::string latestDate = dataMap.rbegin()->first;
+
+    Data** stockData = new Data * [30] {};
+
+    for (int i = 29; i >= 0; --i) {
+        if (dataMap.count(latestDate)) {
+            stockData[i] = dataMap[latestDate];
+        }
+        else {
+            stockData[i] = nullptr;
+        }
+        latestDate = getPreviousDate(latestDate);
+    }
+
+    return stockData;
+}
+
 Data** parseCsv(std::string fileName) {
     std::ifstream file(fileName);
     std::string line;

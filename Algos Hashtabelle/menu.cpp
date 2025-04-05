@@ -29,14 +29,14 @@ int Menu::getInput()
 	}
 
 	// help functionality, this is not an extra input
-	if (split[0] == "HELP" || split[0] == "help")
+	if (split[0] == "HELP" || split[0] == "help" || split[0] == "Help" || split[0] == "h")
 	{
 		help();
 		return 1;
 	}
 
 	// same as help, returns -1 to tell the menu to quit
-	if (split[0] == "QUIT" || split[0] == "quit")
+	if (split[0] == "QUIT" || split[0] == "quit" || split[0] == "Quit" || split[0] == "q")
 	{
 		std::cout << "quitting...";
 		return -1;
