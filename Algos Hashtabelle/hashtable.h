@@ -84,7 +84,9 @@ public:
 
 	bool import(std::string);
 
-	bool loadTable(StockEntry&);
+	bool loadTableEntries(StockEntry& entry, int index);
+
+	bool loadTableEntries(Entry pastEntry, int index);
 	
 private:
 

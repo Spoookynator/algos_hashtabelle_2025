@@ -13,20 +13,28 @@ bool SaveLoad::save(const Hashtable& hashtable, const std::string& filename) { /
 	
 	for (int i = 0; i < TABLE_SIZE; i++) {
 		auto entry = hashtable.currentTable()[i];
-		if (entry->occupied) {
+		if (!entry->empty) {
+            auto occupied = entry->occupied;
+			auto pastName = entry->pastName;
 			auto id = entry->getId();
 			auto data = entry->getData();
-			file << "ENTRY\n" << id->name << "," << id->abbreviation << "," << id->wkn << "\n";
+            file << "ENTRY\n" << i << "," << occupied << "," << pastName << "\n";
+            file << id->name << "," << id->abbreviation << "," << id->wkn << "\n";
 			for (int j = 0; j < 30; j++) {
 				if (data[j] != nullptr) {
 					file << data[j]->date << "," << data[j]->close << "," << data[j]->volume << ","
 						<< data[j]->open << "," << data[j]->high << "," << data[j]->low << "\n";
 				}
 				else {
-					file << "NULL,NULL,NULL,NULL,NULL,NULL\n"; // Indicate empty data
+					file << "NULL\n"; // Indicate empty data
                 }
 			}
 		}
+        else if (entry->empty && entry->occupied){
+            auto occupied = entry->occupied;
+            auto pastName = entry->pastName;
+            file << "PASTENTRY\n" << i << "," << occupied << "," << pastName;
+        }
 	}
 
 	file.close();
@@ -41,18 +49,23 @@ bool SaveLoad::load(Hashtable& hashtable, const std::string& filename) {
     }
 
     std::string line;
+    int currentIndex;
+    Entry currentEntry;
     Id currentId("", "", "");
     Data* currentData[30] = { nullptr };
     bool idIsSet = false;
     int dataIndex = 0;
 
     while (std::getline(file, line)) {
-        bool isNull = (line == "NULL,NULL,NULL,NULL,NULL,NULL");
+        bool isNull = (line == "NULL");
         if (line == "ENTRY") {
             if (idIsSet) {
                 // Create a new StockEntry with the currentId and currentData
                 StockEntry* entry = new StockEntry(currentId, currentData);
-                hashtable.loadTable(*entry); // Add to hashtable
+                entry->empty = false;
+				entry->occupied = true; // Mark as occupied
+                entry->pastName = "";
+                hashtable.loadTableEntries(*entry, currentIndex); // Add to hashtable
 
                 // Clean up currentData
                 for (int i = 0; i < 30; i++) {
@@ -62,6 +75,9 @@ bool SaveLoad::load(Hashtable& hashtable, const std::string& filename) {
                 currentId.name = "";
                 currentId.abbreviation = "";
                 currentId.wkn = "";
+                currentEntry.empty = true;
+				currentEntry.occupied = false;
+				entry->pastName = "";
                 dataIndex = 0;
             }
 
@@ -69,22 +85,50 @@ bool SaveLoad::load(Hashtable& hashtable, const std::string& filename) {
                 std::cerr << "Expected ID line but found end of file!" << std::endl;
                 break;
             }
-            std::stringstream idStrings(line);
-            std::string name, abbreviation, wkn;
-            std::getline(idStrings, name, ',');
-            std::getline(idStrings, abbreviation, ',');
-            std::getline(idStrings, wkn, ',');
-            currentId = Id(name, abbreviation, wkn);
-            idIsSet = true;
-            if (hashtable.currentTable()[hashtable.calculateHash(name)]->occupied) {
-				hashtable.remove(name); // remove old entry
-            }
+
+			std::stringstream entryStrings(line);
+			std::string indexStr;
+			std::string occupiedStr;
+			std::string pastNameStr;
+			std::getline(entryStrings, indexStr, ',');
+			currentIndex = std::stoi(indexStr);
+			std::getline(entryStrings, occupiedStr, ',');
+			bool occupied = (occupiedStr == "true") ? true : false;
+			std::getline(entryStrings, pastNameStr, ',');
+            currentEntry = Entry(false, occupied, pastNameStr);
         }
+        else if (line == "PASTENTRY") {
+            std::getline(file, line);
+            std::string indexStr;
+            std::string occupiedStr;
+            std::string pastNameStr;
+            std::stringstream entryStrings(line);
+            std::getline(entryStrings, indexStr, ',');
+            int index = stoi(indexStr);
+            std::getline(entryStrings, occupiedStr, ',');
+            bool occupied = (occupiedStr == "true") ? true : false;
+            std::getline(entryStrings, pastNameStr, ',');
+            Entry pastEntry = Entry(false, occupied, pastNameStr);
+            hashtable.loadTableEntries(pastEntry, index);
+        }
+		else if (line == "NULL") {
+			// Handle NULL data
+			currentData[dataIndex] = nullptr;
+			dataIndex++;
+		}
         else {
             int commaCount = std::count(line.begin(), line.end(), ',');
-            if (isNull) {
-                currentData[dataIndex] = nullptr; // Indicate empty data
-                dataIndex++;
+            if (commaCount == 2) {
+                std::stringstream idStrings(line);
+                std::string name, abbreviation, wkn;
+                std::getline(idStrings, name, ',');
+                std::getline(idStrings, abbreviation, ',');
+                std::getline(idStrings, wkn, ',');
+                currentId = Id(name, abbreviation, wkn);
+                idIsSet = true;
+                if (hashtable.currentTable()[currentIndex]->occupied) {
+                    hashtable.remove(name); // remove old entry
+                }
             }
             // Count the number of commas in the line
             else if (commaCount == 5) {
@@ -114,7 +158,7 @@ bool SaveLoad::load(Hashtable& hashtable, const std::string& filename) {
     // Load the last entry if idIsSet is true
     if (idIsSet) {
         StockEntry* entry = new StockEntry(currentId, currentData);
-        hashtable.loadTable(*entry);
+        hashtable.loadTableEntries(*entry);
 
         // Clean up currentData
         for (int i = 0; i < 30; i++) {

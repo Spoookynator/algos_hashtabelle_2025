@@ -53,22 +53,28 @@ bool Hashtable::import(std::string stockName)
 	return true;
 }
 
-bool Hashtable::loadTable(StockEntry& entry)
+bool Hashtable::loadTableEntries(StockEntry& entry, int index)
 {
-	auto name = entry.getId()->name;
-
-	int hash = findHash(name);
-
-	if (hash < 0) {
-		hash *= 1;
+	if (this->table[index]->empty == false) {
+		entry.pastName = this->table[index]->pastName;
 	}
 
-	this->table[hash] = new StockEntry(entry); // add new entry
+	this->table[index] = new StockEntry(entry); // add new entry
 
-	//the code below causes an error
 	Data** data = entry.stockData;
 	if (data == nullptr) return false;
 	
+	return true;
+}
+
+bool Hashtable::loadTableEntries(Entry pastEntry, int index)
+{
+	if (this->table[index]->empty == false) {
+		pastEntry.pastName = this->table[index]->pastName;
+	}
+	this->table[index]->empty = pastEntry.empty;
+	this->table[index]->occupied = pastEntry.occupied;
+	this->table[index]->pastName = pastEntry.pastName;
 	return true;
 }
 
